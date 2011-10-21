@@ -4,20 +4,29 @@ function setup() {
   
   var program = gl.createProgram();
   
-  var shader = gl.createShader(gl.VERTEX_SHADER);
+  var shaderError,
+      shader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(
     shader,
-    document.getElementById('vert').innerText
+    document.getElementById('vert').innerHTML
   );
   gl.compileShader(shader);
+  if ((shaderError = gl.getShaderInfoLog(shader))) {
+    console.error('vertex-shader', shaderError);
+    return;
+  }
   gl.attachShader(program, shader);
   
   shader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(
     shader,
-    document.getElementById('frag').innerText
+    document.getElementById('frag').innerHTML
   );
   gl.compileShader(shader);
+  if ((shaderError = gl.getShaderInfoLog(shader))) {
+    console.error('vertex-shader', shaderError);
+    return;
+  }
   gl.attachShader(program, shader);
   
   gl.linkProgram(program);

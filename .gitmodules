@@ -4,3 +4,6 @@
 [submodule "wiki"]
 	path = wiki
 	url = git@github.com:boazsender/Abacus.wiki.git
+[submodule "examples/lib/glmatrix"]
+	path = examples/lib/glmatrix
+	url = https://github.com/toji/gl-matrix.git

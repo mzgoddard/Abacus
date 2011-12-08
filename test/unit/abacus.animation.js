@@ -1,7 +1,8 @@
 module('Animation');
 
-test('animation defined functions exists', 3, function() {
+test('animation defined functions exists', 4, function() {
   ok( Abacus.animation, 'animation exists' );
+  ok( Abacus.animation.state, 'animation.state exists' );
   ok( Abacus.animation.layer, 'animation.layer exists' );
   ok( Abacus.animation.frame, 'animation.frame exists' );
 });
@@ -15,6 +16,17 @@ test('animation methods', 5, function() {
   ok( animation.addLayer, 'animation.addLayer exists' );
   ok( animation.layer, 'animation.layer exists' );
 });
+
+test( 'animation.state methods', 3, function() {
+  var state = Abacus.animation.state( {
+    animation: Abacus.animation( {} ),
+    target: {}
+  } );
+  
+  ok( state.start, 'state.start exists' );
+  ok( state.stop, 'state.stop exists' );
+  ok( state.step, 'state.step exists' );
+} );
 
 test('layer methods', 5, function() {
   var layer = Abacus.animation.layer();

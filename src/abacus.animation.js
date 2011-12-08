@@ -427,8 +427,85 @@
     }
   };
 
+  // AnimationState constructor
+  // Mapped from calls to Abacus.animation.state( options )
+  function AnimationState( options ) {
+    var i, length;
+
+    // options.animation <Abacus.Animation>
+    // options.target <object>
+    // options.timer <Abacus.Timer>
+    Abacus.extend( this, options );
+
+    this.startAt = 0;
+    this.stopAt = Infinity;
+
+    if ( this.timer == null ) {
+      this.timer = Abacus.timer({
+        callback: this.step.bind( this )
+      });
+    }
+
+    // echo this.animation.layers with objects to be used for state
+    this.layers = [];
+    for ( i = 0, length = this.animation.layers.length; i < length; i++ ) {
+      this.layers.push( {} );
+    }
+  }
+
+  AnimationState.prototype = {
+    // AnimationState.start( startAt || 0 )
+    // start animation now at time startAt
+    start: function( startAt ) {
+      this.startAt = startAt || 0;
+      
+      this.timer.start();
+      
+      return this;
+    },
+
+    // AnimationState.stop( stopAt || 0 )
+    // stop animation when it reaches stopAt
+    stop: function( stopAt ) {
+      this.stopAt = stopAt || 0;
+      
+      if ( stopAt == null ) {
+        this.timer.stop();
+      }
+      
+      return this;
+    },
+
+    // AnimationState.step( timerData )
+    // move the animation forward
+    step: function( timerData ) {
+      var animation = this.animation,
+          target = this.target,
+          layers = animation.layers,
+          states = this.layers,
+          complete = true,
+          i,
+          length,
+          time;
+
+      time = timerData.sinceStart + this.startAt;
+
+      for ( i = 0, length = layers.length; i < length; i++ ) {
+        complete = layers[i].sample( animation, target, time, states[i] ) && complete;
+      }
+
+      if ( complete || time >= this.stopAt ) {
+        this.timer.stop();
+      }
+    }
+  };
+
   Abacus.animation = function( options ) {
     return new Animation(options);
+  };
+
+  Abacus.animation.state = function( options ) {
+    return new AnimationState( options );
   };
 
   Abacus.animation.layer = function( options ) {
